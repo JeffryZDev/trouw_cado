@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#c58694">
+    <title>Catriona & Robert</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1 class="login-title">Welkom</h1>
+            <p class="login-subtitle">Voer uw namen in om verder te gaan</p>
+            
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="firstName" 
+                    placeholder="Naam van de bruid" 
+                    autocomplete="off"
+                >
+                <input 
+                    type="text" 
+                    id="lastName" 
+                    placeholder="Naam van de bruidegom" 
+                    autocomplete="off"
+                >
+                <button onclick="checkPassword()">Invoeren</button>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                ❌ Onjuiste namen. Probeer het opnieuw.
+            </div>
+        </div>
+    </div>
+
+    <div class="wedding-container" id="weddingContainer">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="names">
+                    Catriona
+                    <span class="ampersand">&</span>
+                    Robert
+                </div>
+                <div class="tagline">Een liefdesverhaal</div>
+            </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div class="lightbox" id="lightbox">
+            <div class="lightbox-content">
+                <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+                <img id="lightboxImage" class="lightbox-image" src="" alt="Enlarged view">
+                <div class="lightbox-nav">
+                    <button class="lightbox-prev" onclick="previousImage()">❮</button>
+                    <button class="lightbox-next" onclick="nextImage()">❯</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="message-section">
+                <div class="message-title">✨ Welkom ✨</div>
+                <div class="decorative-line"></div>
+                <div class="message-text" id="welcomeMessageText">
+                    We zijn zo blij dat je hier bent om met ons te vieren
+                </div>
+            </div>
+
+            <div class="gift-area">
+                <div class="gift-emoji">🎁</div>
+                <div class="message-title" id="giftTitle">Een Speciaal Cadeau</div>
+                <div class="decorative-line"></div>
+                <div class="gift-text" id="giftContent">
+                    <p>Lieve Catriona & Robert,</p>
+                    <br>
+                    <p>Deze website is met liefde gemaakt als cadeau ter herdenking van jullie speciale reis samen. Moge het dienen als een digitale herinnering aan deze prachtige viering en jullie herinneren aan de liefde en vreugde om jullie heen.</p>
+                    <br>
+                    <p>Wij wensen jullie een leven vol geluk en mooie momenten samen. ❤️</p>
+                </div>
+            </div>
+
+            <div class="media-section">
+                <div class="message-title">📸 Herinneringen 📸</div>
+                <div class="decorative-line"></div>
+                <div class="media-gallery" id="mediaGallery"></div>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">← Terug</button>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            brideName: 'catriona',
+            groomName: 'robert',
+
+            welcomeMessage: 'VAN HARTE GEFELICITEERD MET JULLIE HUWELIJK!',
+
+            giftTitle: 'Een Speciaal Cadeau',
+            giftMessage: `
+                <p>Lieve Catriona & Robert,</p>
+                <br>
+                <p>Van harte gefeliciteerd met jullie huwelijk!</p>
+                <p>Ik hoop dat jullie een fijne dag hebben.</p>
+                <p>Maak mooie herinneringen en geniet van elkaar.</p>
+                <br>
+                <p>Wij wensen jullie een leven vol geluk en mooie momenten samen. ❤️</p>
+                <br>
+                <p>Maak er een onvergetelijke dag van!</p>
+                <p>Jeffry</p>
+            `,
+
+            // GENERATED_MEDIA_START
+            preloadedMedia: [
+                      {
+                                "type": "image",
+                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (1).jpeg"
+                      },
+                      {
+                                "type": "image",
+                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (2).jpeg"
+                      },
+                      {
+                                "type": "image",
+                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (4).jpeg"
+                      },
+                      {
+                                "type": "image",
+                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27.jpeg"
+                      }
+            ],
+            // GENERATED_MEDIA_END
+        };
+
+        class WeddingSite {
+            constructor(validBrideName, validGroomName) {
+                this.validBrideName = validBrideName.toLowerCase();
+                this.validGroomName = validGroomName.toLowerCase();
+                this.loginContainer = document.getElementById('loginContainer');
+                this.weddingContainer = document.getElementById('weddingContainer');
+                this.firstNameInput = document.getElementById('firstName');
+                this.lastNameInput = document.getElementById('lastName');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.mediaGallery = document.getElementById('mediaGallery');
+                this.messageText = document.getElementById('welcomeMessageText');
+                this.giftTitle = document.getElementById('giftTitle');
+                this.giftContent = document.getElementById('giftContent');
+                this.mediaItems = [];
+                this.init();
+            }
+
+            init() {
+                this.loadConfiguration();
+                this.setupEventListeners();
+                this.loadPreloadedMedia();
+                this.firstNameInput.focus();
+            }
+
+            loadConfiguration() {
+                if (this.messageText) this.messageText.textContent = CONFIG.welcomeMessage;
+                if (this.giftTitle) this.giftTitle.textContent = CONFIG.giftTitle;
+                if (this.giftContent) this.giftContent.innerHTML = CONFIG.giftMessage;
+            }
+
+            loadPreloadedMedia() {
+                CONFIG.preloadedMedia.forEach(item => {
+                    this.mediaItems.push({
+                        id: Date.now() + Math.random(),
+                        src: item.src,
+                        type: item.type,
+                        isPreloaded: true
+                    });
+                });
+                this.displayMedia();
+            }
+
+            setupEventListeners() {
+                this.firstNameInput.addEventListener('keypress', (e) => this.handleKeyPress(e));
+                this.lastNameInput.addEventListener('keypress', (e) => this.handleKeyPress(e));
+            }
+
+            displayMedia() {
+                this.mediaGallery.innerHTML = '';
+                this.mediaItems.forEach((item, index) => {
+                    const container = document.createElement('div');
+                    container.className = 'media-container';
+
+                    let mediaElement;
+                    if (item.type === 'image') {
+                        mediaElement = document.createElement('img');
+                        mediaElement.src = item.src;
+                        mediaElement.addEventListener('click', () => openLightbox(index));
+                    } else {
+                        mediaElement = document.createElement('video');
+                        mediaElement.src = item.src;
+                        mediaElement.controls = true;
+                    }
+
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    mediaItem.appendChild(mediaElement);
+
+                    container.appendChild(mediaItem);
+                    this.mediaGallery.appendChild(container);
+                });
+            }
+
+            handleKeyPress(event) {
+                if (event.key === 'Enter') {
+                    if (event.target === this.firstNameInput) {
+                        this.lastNameInput.focus();
+                    } else if (event.target === this.lastNameInput) {
+                        this.authenticate();
+                    }
+                }
+            }
+
+            authenticate() {
+                const firstName = this.firstNameInput.value.trim().toLowerCase();
+                const lastName = this.lastNameInput.value.trim().toLowerCase();
+
+                if (
+                    (firstName === this.validBrideName && lastName === this.validGroomName) ||
+                    (firstName === this.validGroomName && lastName === this.validBrideName)
+                ) {
+                    this.showWeddingPage();
+                } else {
+                    this.showError();
+                }
+            }
+
+            showWeddingPage() {
+                this.loginContainer.style.display = 'none';
+                this.weddingContainer.style.display = 'block';
+                this.errorMessage.style.display = 'none';
+                this.clearInputs();
+            }
+
+            showError() {
+                this.errorMessage.style.display = 'block';
+                this.clearInputs();
+                this.firstNameInput.focus();
+            }
+
+            clearInputs() {
+                this.firstNameInput.value = '';
+                this.lastNameInput.value = '';
+            }
+
+            logout() {
+                this.weddingContainer.style.display = 'none';
+                this.loginContainer.style.display = 'flex';
+                this.errorMessage.style.display = 'none';
+                this.clearInputs();
+                this.mediaItems = [];
+                this.displayMedia();
+                this.firstNameInput.focus();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.weddingSite = new WeddingSite('catriona', 'robert');
+        });
+
+        function checkPassword() {
+            window.weddingSite.authenticate();
+        }
+
+        function logout() {
+            window.weddingSite.logout();
+        }
+
+        // Lightbox functionality
+        let currentImageIndex = 0;
+        let lightboxImages = [];
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            lightboxImages = window.weddingSite.mediaItems.filter(item => item.type === 'image');
+            
+            if (lightboxImages.length === 0) return;
+            
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            
+            lightboxImage.src = lightboxImages[currentImageIndex].src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % lightboxImages.length;
+            document.getElementById('lightboxImage').src = lightboxImages[currentImageIndex].src;
+        }
+
+        function previousImage() {
+            currentImageIndex = (currentImageIndex - 1 + lightboxImages.length) % lightboxImages.length;
+            document.getElementById('lightboxImage').src = lightboxImages[currentImageIndex].src;
+        }
+
+        // Close lightbox on ESC key or clicking outside image
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextImage();
+            }
+            if (touchEndX > touchStartX + 50) {
+                previousImage();
+            }
+        }
+        
+        const lightbox = document.getElementById('lightbox');
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        lightbox.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') previousImage();
+        });
+
+        document.addEventListener('click', (e) => {
+            const lightbox = document.getElementById('lightbox');
+            if (e.target === lightbox) closeLightbox();
+        });
+    </script>
+</body>
+</html>
