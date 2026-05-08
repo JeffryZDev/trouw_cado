@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=5">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#c58694">
     <title>Catriona & Robert</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1 class="login-title">Welkom</h1>
-            <p class="login-subtitle">Voer uw namen in om verder te gaan</p>
-            
+            <h1 class="login-title">Welkom bij het trouwcadeau</h1>
+            <p class="login-subtitle">Voer jullie namen in om verder te gaan</p>
+
             <div class="input-group">
-                <input 
-                    type="text" 
-                    id="firstName" 
-                    placeholder="Naam van de bruid" 
-                    autocomplete="off"
-                >
-                <input 
-                    type="text" 
-                    id="lastName" 
-                    placeholder="Naam van de bruidegom" 
-                    autocomplete="off"
-                >
+                <input type="text" id="firstName" placeholder="Naam van de bruid" autocomplete="off">
+                <input type="text" id="lastName" placeholder="Naam van de bruidegom" autocomplete="off">
                 <button onclick="checkPassword()">Invoeren</button>
             </div>
-            
+
             <div class="error-message" id="errorMessage">
                 ❌ Onjuiste namen. Probeer het opnieuw.
             </div>
@@ -77,9 +70,9 @@
                 <div class="gift-text" id="giftContent">
                     <p>Lieve Catriona & Robert,</p>
                     <br>
-                    <p>Deze website is met liefde gemaakt als cadeau ter herdenking van jullie speciale reis samen. Moge het dienen als een digitale herinnering aan deze prachtige viering en jullie herinneren aan de liefde en vreugde om jullie heen.</p>
+                    <p>Van harte gefeliciteerd met jullie huwelijk!</p>
                     <br>
-                    <p>Wij wensen jullie een leven vol geluk en mooie momenten samen. ❤️</p>
+                    <p>Ik wens jullie een leven vol geluk en mooie momenten samen. ❤️</p>
                 </div>
             </div>
 
@@ -104,38 +97,39 @@
             giftMessage: `
                 <p>Lieve Catriona & Robert,</p>
                 <br>
-                <p>Van harte gefeliciteerd met jullie huwelijk!</p>
-                <p>Ik hoop dat jullie een fijne dag hebben.</p>
-                <p>Maak mooie herinneringen en geniet van elkaar.</p>
+                <p>Van harte gefeliciteerd met jullie huwelijk! Wat gaaf dat jullie nu officieel samen zijn. Als je broer ben ik super trots op je.</p>
                 <br>
-                <p>Wij wensen jullie een leven vol geluk en mooie momenten samen. ❤️</p>
+                <p>Bekijk de foto's hieronder, allemaal herinneringen aan jullie leven samen. Van die eerste ontmoeting tot nu, jullie verhaal is prachtig. Wat een mooie momenten!</p>
                 <br>
-                <p>Maak er een onvergetelijke dag van!</p>
+                <p>Voor de toekomst: ik wens jullie een leven vol liefde, avonturen en misschien af en toe een beetje familiechaos. Jullie passen perfect bij elkaar.</p>
+                <br>
+                <p>Gefeliciteerd en veel liefs van je broer!</p>
+                <br>
                 <p>Jeffry</p>
             `,
 
             // GENERATED_MEDIA_START
             preloadedMedia: [
-                      {
-                                "type": "image",
-                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (1).jpeg"
-                      },
-                      {
-                                "type": "image",
-                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (2).jpeg"
-                      },
-                      {
-                                "type": "image",
-                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (4).jpeg"
-                      },
-                      {
-                                "type": "image",
-                                "src": "media/WhatsApp Image 2026-05-03 at 10.52.27.jpeg"
-                      },
-                      {
-                                "type": "image",
-                                "src": "media/WhatsApp Image 2026-05-03 at 11.37.43.jpeg"
-                      }
+                {
+                    "type": "image",
+                    "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (1).jpeg"
+                },
+                {
+                    "type": "image",
+                    "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (2).jpeg"
+                },
+                {
+                    "type": "image",
+                    "src": "media/WhatsApp Image 2026-05-03 at 10.52.27 (4).jpeg"
+                },
+                {
+                    "type": "image",
+                    "src": "media/WhatsApp Image 2026-05-03 at 10.52.27.jpeg"
+                },
+                {
+                    "type": "image",
+                    "src": "media/WhatsApp Image 2026-05-03 at 11.37.43.jpeg"
+                }
             ],
             // GENERATED_MEDIA_END
         };
@@ -266,7 +260,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             window.weddingSite = new WeddingSite('catriona', 'robert');
         });
 
@@ -285,12 +279,12 @@
         function openLightbox(index) {
             currentImageIndex = index;
             lightboxImages = window.weddingSite.mediaItems.filter(item => item.type === 'image');
-            
+
             if (lightboxImages.length === 0) return;
-            
+
             const lightbox = document.getElementById('lightbox');
             const lightboxImage = document.getElementById('lightboxImage');
-            
+
             lightboxImage.src = lightboxImages[currentImageIndex].src;
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -315,7 +309,7 @@
         // Close lightbox on ESC key or clicking outside image
         let touchStartX = 0;
         let touchEndX = 0;
-        
+
         function handleSwipe() {
             if (touchEndX < touchStartX - 50) {
                 nextImage();
@@ -324,17 +318,17 @@
                 previousImage();
             }
         }
-        
+
         const lightbox = document.getElementById('lightbox');
         lightbox.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         }, false);
-        
+
         lightbox.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         }, false);
-        
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeLightbox();
             if (e.key === 'ArrowRight') nextImage();
@@ -347,4 +341,5 @@
         });
     </script>
 </body>
+
 </html>
